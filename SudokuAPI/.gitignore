@@ -1,0 +1,22 @@
+## Build results
+bin/
+obj/
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+
+## Visual Studio
+.vs/
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## macOS
+.DS_Store
+
+## Test Results
+*.trx
+*.coverage
