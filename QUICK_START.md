@@ -1,10 +1,10 @@
-# Quick Start Guide - Sudoku Zen
+# ⚡ Quick Start Guide - Sudoku Zen
 
 **Get up and running in 2 minutes!**
 
 ---
 
-## One-Command Start
+## 🚀 One-Command Start
 
 ```powershell
 .\start.bat
@@ -16,7 +16,7 @@ This launches:
 
 ---
 
-## Prerequisites Checklist
+## 📋 Prerequisites Checklist
 
 Before running, ensure you have:
 
@@ -33,24 +33,24 @@ Before running, ensure you have:
 
 ---
 
-## Manual Start (Alternative)
+## 🎮 Manual Start (Alternative)
 
 ### Terminal 1 - Backend API
 ```powershell
 cd SudokuAPI
 dotnet run
 ```
-API running at http://localhost:5000
+✅ API running at http://localhost:5000
 
 ### Terminal 2 - Frontend
 ```powershell
 npm run dev
 ```
-Game running at http://localhost:3000
+✅ Game running at http://localhost:3000
 
 ---
 
-## URLs to Know
+## 🌐 URLs to Know
 
 | Service | URL | Purpose |
 |---------|-----|---------|
@@ -60,7 +60,7 @@ Game running at http://localhost:3000
 
 ---
 
-##  First Time Setup
+## 🎯 First Time Setup
 
 ```powershell
 # 1. Install dependencies
@@ -77,7 +77,7 @@ cd ..
 
 ---
 
-## Common Commands
+## 💡 Common Commands
 
 ### Development
 ```powershell
@@ -115,7 +115,7 @@ curl -X POST http://localhost:5000/api/players ^
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### "dotnet command not found"
 → Install .NET SDK: https://dotnet.microsoft.com/download/dotnet/8.0
@@ -139,7 +139,7 @@ const API_BASE_URL = 'http://localhost:5000/api';
 
 ---
 
-##  API Quick Reference
+## 📊 API Quick Reference
 
 ### Players
 ```http
@@ -169,7 +169,7 @@ POST   /api/sessions/{id}/complete # Finish
 
 ---
 
-## How to Play
+## 🎮 How to Play
 
 1. Open http://localhost:3000
 2. Enter your username
@@ -181,7 +181,7 @@ POST   /api/sessions/{id}/complete # Finish
 
 ---
 
-##  Optional: Gemini AI Setup
+## 🔑 Optional: Gemini AI Setup
 
 For AI-powered hints:
 
@@ -194,7 +194,7 @@ For AI-powered hints:
 
 ---
 
-## Key Files
+## 📁 Key Files
 
 | File | Purpose |
 |------|---------|
@@ -206,7 +206,7 @@ For AI-powered hints:
 
 ---
 
-## Learning Path
+## 🎓 Learning Path
 
 **New to the project?** Read in this order:
 
@@ -218,7 +218,7 @@ For AI-powered hints:
 
 ---
 
-## Health Check
+## ✅ Health Check
 
 Verify everything works:
 
@@ -248,12 +248,12 @@ npm run build
 
 ---
 
-## Status Indicators
+## 🚦 Status Indicators
 
 **Backend Running:**
 ```
- Sudoku API is running!
-API URL: http://localhost:5000
+✓ Sudoku API is running!
+📍 API URL: http://localhost:5000
 ```
 
 **Frontend Running:**
@@ -264,7 +264,7 @@ VITE ready in XXXms
 
 ---
 
-## Data Persistence
+## 💾 Data Persistence
 
 **Current**: In-memory (resets on restart)
 
@@ -277,17 +277,22 @@ VITE ready in XXXms
 
 ---
 
-## Next Steps
+## 🎯 Next Steps
 
 After getting it running:
 
-1. Play a game to test
-2. Check leaderboard
-3. Visit Swagger UI to explore API
-4. Try creating a player via API
-5. View statistics dashboard
+1. ✅ Play a game to test
+2. ✅ Check leaderboard
+3. ✅ Visit Swagger UI to explore API
+4. ✅ Try creating a player via API
+5. ✅ View statistics dashboard
 
 ---
 
 **Need more help?** See `INSTALLATION.md` for detailed troubleshooting!
 
+---
+
+**Version**: 2.0  
+**Last Updated**: 2025-11-30  
+**Status**: ✅ Ready to Run

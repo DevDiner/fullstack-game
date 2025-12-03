@@ -1,10 +1,10 @@
-# Installation Guide - Sudoku Zen Full Stack
+# 📦 Installation Guide - Sudoku Zen Full Stack
 
 Complete setup instructions for the Sudoku Zen application.
 
 ---
 
-## Prerequisites
+## 🎯 Prerequisites
 
 Before you begin, ensure you have:
 
@@ -52,11 +52,11 @@ git --version
 
 ---
 
-## Installation Steps
+## 🚀 Installation Steps
 
 ### Step 1: Navigate to Project
 ```powershell
-cd "c:\Users\"
+cd "c:\Users\Irwin\Downloads\sudoku-zen"
 ```
 
 ### Step 2: Install Frontend Dependencies
@@ -91,7 +91,7 @@ Get your API key: https://aistudio.google.com/app/apikey
 
 ---
 
-## Verify Installation
+## ✅ Verify Installation
 
 ### Test Backend
 ```powershell
@@ -119,7 +119,7 @@ Expected output:
 
 ---
 
-## Running the Application
+## 🏃 Running the Application
 
 ### Option 1: Quick Start (Recommended)
 ```powershell
@@ -145,7 +145,7 @@ npm run dev
 
 ---
 
-## Troubleshooting
+## 🔧 Troubleshooting
 
 ### Error: "dotnet command not found"
 **Solution**: Install .NET SDK and restart your terminal
@@ -177,7 +177,7 @@ const API_BASE_URL = 'http://localhost:5001/api';
 
 ---
 
-## Development Mode
+## 📱 Development Mode
 
 ### Hot Reload
 Both servers support hot reload:
@@ -194,7 +194,7 @@ This auto-restarts the API when you change C# files.
 
 ---
 
-## Production Build
+## 🏗️ Production Build
 
 ### Backend
 ```powershell
@@ -213,7 +213,7 @@ Output in: `dist/`
 
 ---
 
-## Docker (Optional)
+## 🐳 Docker (Optional)
 
 Want to run in Docker?
 
@@ -242,7 +242,7 @@ docker run -p 5000:5000 sudoku-api
 
 ---
 
-## Next Steps
+## 🎯 Next Steps
 
 After installation:
 1. Run `start.bat` to launch everything
@@ -253,7 +253,7 @@ After installation:
 
 ---
 
-## Tips
+## 💡 Tips
 
 - **First time?** Start with Easy difficulty
 - **Want hints?** Configure Gemini API key
@@ -262,7 +262,7 @@ After installation:
 
 ---
 
-## Still Having Issues?
+## 📞 Still Having Issues?
 
 Common solutions:
 1. Restart your computer
@@ -273,4 +273,4 @@ Common solutions:
 
 ---
 
-**Installation complete! You're ready to play Sudoku Zen!**
+**Installation complete! You're ready to play Sudoku Zen! 🎉**

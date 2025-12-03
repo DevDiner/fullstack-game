@@ -1,0 +1,32 @@
+@echo off
+echo ================================================
+echo 🎮 Sudoku API - Database Setup Script
+echo ================================================
+echo.
+
+cd /d "%~dp0"
+
+echo 📦 Step 1: Installing EF Core tools...
+dotnet tool install --global dotnet-ef
+
+echo.
+echo 📥 Step 2: Restoring NuGet packages...
+dotnet restore
+
+echo.
+echo 🗄️ Step 3: Creating database migration...
+dotnet ef migrations add InitialCreate
+
+echo.
+echo 💾 Step 4: Creating database...
+dotnet ef database update
+
+echo.
+echo ✅ Database setup complete!
+echo.
+echo ================================================
+echo 🚀 Starting API Server...
+echo ================================================
+dotnet run
+
+pause

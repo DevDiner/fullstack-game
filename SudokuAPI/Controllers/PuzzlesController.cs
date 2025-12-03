@@ -17,16 +17,17 @@ namespace SudokuAPI.Controllers
 
         // GET: api/puzzles
         [HttpGet]
-        public ActionResult<List<SudokuPuzzle>> GetAll()
+        public async Task<ActionResult<List<SudokuPuzzle>>> GetAll()
         {
-            return Ok(_puzzleManager.GetAllPuzzles());
+            var puzzles = await _puzzleManager.GetAllPuzzlesAsync();
+            return Ok(puzzles);
         }
 
         // GET: api/puzzles/5
         [HttpGet("{id}")]
-        public ActionResult<SudokuPuzzle> GetById(int id)
+        public async Task<ActionResult<SudokuPuzzle>> GetById(int id)
         {
-            var puzzle = _puzzleManager.GetPuzzle(id);
+            var puzzle = await _puzzleManager.GetPuzzleAsync(id);
             if (puzzle == null)
                 return NotFound(new { message = $"Puzzle with ID {id} not found" });
             
@@ -35,16 +36,17 @@ namespace SudokuAPI.Controllers
 
         // GET: api/puzzles/difficulty/easy
         [HttpGet("difficulty/{difficulty}")]
-        public ActionResult<List<SudokuPuzzle>> GetByDifficulty(DifficultyLevel difficulty)
+        public async Task<ActionResult<List<SudokuPuzzle>>> GetByDifficulty(DifficultyLevel difficulty)
         {
-            return Ok(_puzzleManager.GetPuzzlesByDifficulty(difficulty));
+            var puzzles = await _puzzleManager.GetPuzzlesByDifficultyAsync(difficulty);
+            return Ok(puzzles);
         }
 
         // GET: api/puzzles/random?difficulty=easy
         [HttpGet("random")]
-        public ActionResult<SudokuPuzzle> GetRandom([FromQuery] DifficultyLevel? difficulty)
+        public async Task<ActionResult<SudokuPuzzle>> GetRandom([FromQuery] DifficultyLevel? difficulty)
         {
-            var puzzle = _puzzleManager.GetRandomPuzzle(difficulty);
+            var puzzle = await _puzzleManager.GetRandomPuzzleAsync(difficulty);
             if (puzzle == null)
                 return NotFound(new { message = "No puzzles available for the specified difficulty" });
             
@@ -53,17 +55,18 @@ namespace SudokuAPI.Controllers
 
         // POST: api/puzzles
         [HttpPost]
-        public ActionResult<SudokuPuzzle> Create([FromBody] SudokuPuzzle puzzle)
+        public async Task<ActionResult<SudokuPuzzle>> Create([FromBody] SudokuPuzzle puzzle)
         {
-            var created = _puzzleManager.AddPuzzle(puzzle);
+            var created = await _puzzleManager.AddPuzzleAsync(puzzle);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         // PUT: api/puzzles/5
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] SudokuPuzzle puzzle)
+        public async Task<IActionResult> Update(int id, [FromBody] SudokuPuzzle puzzle)
         {
-            if (_puzzleManager.UpdatePuzzle(id, puzzle))
+            var updated = await _puzzleManager.UpdatePuzzleAsync(id, puzzle);
+            if (updated)
                 return NoContent();
             
             return NotFound(new { message = $"Puzzle with ID {id} not found" });
@@ -71,9 +74,10 @@ namespace SudokuAPI.Controllers
 
         // POST: api/puzzles/5/play
         [HttpPost("{id}/play")]
-        public IActionResult RecordPlay(int id, [FromBody] PlayRecord record)
+        public async Task<IActionResult> RecordPlay(int id, [FromBody] PlayRecord record)
         {
-            if (_puzzleManager.RecordPlay(id, record.Completed, record.TimeSeconds))
+            var recorded = await _puzzleManager.RecordPlayAsync(id, record.Completed, record.TimeSeconds);
+            if (recorded)
                 return Ok(new { message = "Play recorded successfully" });
             
             return NotFound(new { message = $"Puzzle with ID {id} not found" });
@@ -81,9 +85,10 @@ namespace SudokuAPI.Controllers
 
         // DELETE: api/puzzles/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_puzzleManager.DeletePuzzle(id))
+            var deleted = await _puzzleManager.DeletePuzzleAsync(id);
+            if (deleted)
                 return NoContent();
             
             return NotFound(new { message = $"Puzzle with ID {id} not found" });
@@ -91,23 +96,26 @@ namespace SudokuAPI.Controllers
 
         // GET: api/puzzles/stats/difficulty
         [HttpGet("stats/difficulty")]
-        public ActionResult<Dictionary<DifficultyLevel, int>> GetDifficultyStats()
+        public async Task<ActionResult<Dictionary<DifficultyLevel, int>>> GetDifficultyStats()
         {
-            return Ok(_puzzleManager.GetPuzzleCountByDifficulty());
+            var stats = await _puzzleManager.GetPuzzleCountByDifficultyAsync();
+            return Ok(stats);
         }
 
         // GET: api/puzzles/top?count=10
         [HttpGet("top")]
-        public ActionResult<List<SudokuPuzzle>> GetMostPlayed([FromQuery] int count = 10)
+        public async Task<ActionResult<List<SudokuPuzzle>>> GetMostPlayed([FromQuery] int count = 10)
         {
-            return Ok(_puzzleManager.GetMostPlayedPuzzles(count));
+            var puzzles = await _puzzleManager.GetMostPlayedPuzzlesAsync(count);
+            return Ok(puzzles);
         }
 
         // GET: api/puzzles/stats/completion-rate
         [HttpGet("stats/completion-rate")]
-        public ActionResult<object> GetCompletionStats()
+        public async Task<ActionResult<object>> GetCompletionStats()
         {
-            return Ok(new { averageCompletionRate = _puzzleManager.GetAverageCompletionRate() });
+            var rate = await _puzzleManager.GetAverageCompletionRateAsync();
+            return Ok(new { averageCompletionRate = rate });
         }
     }
 

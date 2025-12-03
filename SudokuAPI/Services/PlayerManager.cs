@@ -1,65 +1,71 @@
+using Microsoft.EntityFrameworkCore;
+using SudokuAPI.Data;
 using SudokuAPI.Models;
 
 namespace SudokuAPI.Services
 {
     /// <summary>
-    /// Manages CRUD operations for player profiles
+    /// Manages CRUD operations for player profiles using Entity Framework
     /// </summary>
     public class PlayerManager
     {
-        public List<PlayerProfile> Players { get; private set; } = new List<PlayerProfile>();
-        private int nextId = 1;
+        private readonly SudokuDbContext _context;
+
+        public PlayerManager(SudokuDbContext context)
+        {
+            _context = context;
+        }
 
         // CREATE
-        public PlayerProfile AddPlayer(PlayerProfile player)
+        public async Task<PlayerProfile> AddPlayerAsync(PlayerProfile player)
         {
-            player.Id = nextId++;
-            player.AccountCreated = DateTime.Now;
-            player.LastPlayed = DateTime.Now;
-            Players.Add(player);
+            player.AccountCreated = DateTime.UtcNow;
+            player.LastPlayed = DateTime.UtcNow;
+            _context.Players.Add(player);
+            await _context.SaveChangesAsync();
             return player;
         }
 
         // READ
-        public PlayerProfile? GetPlayer(int id)
+        public async Task<PlayerProfile?> GetPlayerAsync(int id)
         {
-            return Players.FirstOrDefault(p => p.Id == id);
+            return await _context.Players.FindAsync(id);
         }
 
-        public PlayerProfile? GetPlayerByUsername(string username)
+        public async Task<PlayerProfile?> GetPlayerByUsernameAsync(string username)
         {
-            return Players.FirstOrDefault(p => p.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+            return await _context.Players
+                .FirstOrDefaultAsync(p => p.Username == username);
         }
 
-        public List<PlayerProfile> GetAllPlayers()
+        public async Task<List<PlayerProfile>> GetAllPlayersAsync()
         {
-            return Players.ToList();
+            return await _context.Players.ToListAsync();
         }
 
         // UPDATE
-        public bool UpdatePlayer(int id, PlayerProfile updatedPlayer)
+        public async Task<bool> UpdatePlayerAsync(int id, PlayerProfile updatedPlayer)
         {
-            var player = GetPlayer(id);
+            var player = await _context.Players.FindAsync(id);
             if (player != null)
             {
-                updatedPlayer.Id = id;
-                updatedPlayer.AccountCreated = player.AccountCreated; // Preserve creation date
-                var index = Players.IndexOf(player);
-                Players[index] = updatedPlayer;
+                updatedPlayer.AccountCreated = player.AccountCreated; // Preserve
+                _context.Entry(player).CurrentValues.SetValues(updatedPlayer);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        public bool RecordGamePlayed(int playerId, bool completed, int timeSeconds, int hintsUsed)
+        public async Task<bool> RecordGamePlayedAsync(int playerId, bool completed, int timeSeconds, int hintsUsed)
         {
-            var player = GetPlayer(playerId);
+            var player = await _context.Players.FindAsync(playerId);
             if (player != null)
             {
                 player.TotalGamesPlayed++;
                 player.TotalHintsUsed += hintsUsed;
                 player.TotalPlayTimeSeconds += timeSeconds;
-                player.LastPlayed = DateTime.Now;
+                player.LastPlayed = DateTime.UtcNow;
 
                 if (completed)
                 {
@@ -69,7 +75,7 @@ namespace SudokuAPI.Services
                     {
                         player.LongestStreak = player.CurrentStreak;
                     }
-player.BestTimeSeconds = (player.BestTimeSeconds == 0 || timeSeconds < player.BestTimeSeconds)
+                    player.BestTimeSeconds = (player.BestTimeSeconds == 0 || timeSeconds < player.BestTimeSeconds)
                         ? timeSeconds
                         : player.BestTimeSeconds;
                 }
@@ -77,64 +83,68 @@ player.BestTimeSeconds = (player.BestTimeSeconds == 0 || timeSeconds < player.Be
                 {
                     player.CurrentStreak = 0;
                 }
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
         // DELETE
-        public bool DeletePlayer(int id)
+        public async Task<bool> DeletePlayerAsync(int id)
         {
-            var player = GetPlayer(id);
+            var player = await _context.Players.FindAsync(id);
             if (player != null)
             {
-                Players.Remove(player);
+                _context.Players.Remove(player);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
         // ANALYTICS (LINQ Queries)
-        public List<PlayerProfile> GetLeaderboard(int count = 10)
+        public async Task<List<PlayerProfile>> GetLeaderboardAsync(int count = 10)
         {
-            return Players
+            return await _context.Players
                 .OrderByDescending(p => p.TotalGamesCompleted)
                 .ThenByDescending(p => p.CompletionRate)
                 .Take(count)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<PlayerProfile> GetTopPlayersByStreak(int count = 10)
+        public async Task<List<PlayerProfile>> GetTopPlayersByStreakAsync(int count = 10)
         {
-            return Players
+            return await _context.Players
                 .OrderByDescending(p => p.CurrentStreak)
                 .Take(count)
-                .ToList();
+                .ToListAsync();
         }
 
-        public List<PlayerProfile> GetFastestPlayers(int count = 10)
+        public async Task<List<PlayerProfile>> GetFastestPlayersAsync(int count = 10)
         {
-            return Players
+            return await _context.Players
                 .Where(p => p.BestTimeSeconds > 0)
                 .OrderBy(p => p.BestTimeSeconds)
                 .Take(count)
-                .ToList();
+                .ToListAsync();
         }
 
-        public double GetAverageCompletionRate()
+        public async Task<double> GetAverageCompletionRateAsync()
         {
-            return Players.Any() ? Players.Average(p => p.CompletionRate) : 0;
+            var players = await _context.Players.ToListAsync();
+            return players.Any() ? players.Average(p => p.CompletionRate) : 0;
         }
 
-        public int GetTotalGamesPlayed()
+        public async Task<int> GetTotalGamesPlayedAsync()
         {
-            return Players.Sum(p => p.TotalGamesPlayed);
+            return await _context.Players.SumAsync(p => p.TotalGamesPlayed);
         }
 
-        public int GetActivePlayers(int daysActive = 7)
+        public async Task<int> GetActivePlayersAsync(int daysActive = 7)
         {
-            var cutoffDate = DateTime.Now.AddDays(-daysActive);
-            return Players.Count(p => p.LastPlayed >= cutoffDate);
+            var cutoffDate = DateTime.UtcNow.AddDays(-daysActive);
+            return await _context.Players
+                .CountAsync(p => p.LastPlayed >= cutoffDate);
         }
     }
 }

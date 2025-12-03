@@ -17,16 +17,17 @@ namespace SudokuAPI.Controllers
 
         // GET: api/sessions
         [HttpGet]
-        public ActionResult<List<GameSession>> GetAll()
+        public async Task<ActionResult<List<GameSession>>> GetAll()
         {
-            return Ok(_sessionManager.GetAllSessions());
+            var sessions = await _sessionManager.GetAllSessionsAsync();
+            return Ok(sessions);
         }
 
         // GET: api/sessions/5
         [HttpGet("{id}")]
-        public ActionResult<GameSession> GetById(int id)
+        public async Task<ActionResult<GameSession>> GetById(int id)
         {
-            var session = _sessionManager.GetSession(id);
+            var session = await _sessionManager.GetSessionAsync(id);
             if (session == null)
                 return NotFound(new { message = $"Session with ID {id} not found" });
             
@@ -35,23 +36,25 @@ namespace SudokuAPI.Controllers
 
         // GET: api/sessions/player/5
         [HttpGet("player/{playerId}")]
-        public ActionResult<List<GameSession>> GetByPlayer(int playerId)
+        public async Task<ActionResult<List<GameSession>>> GetByPlayer(int playerId)
         {
-            return Ok(_sessionManager.GetSessionsByPlayer(playerId));
+            var sessions = await _sessionManager.GetSessionsByPlayerAsync(playerId);
+            return Ok(sessions);
         }
 
         // GET: api/sessions/puzzle/5
         [HttpGet("puzzle/{puzzleId}")]
-        public ActionResult<List<GameSession>> GetByPuzzle(int puzzleId)
+        public async Task<ActionResult<List<GameSession>>> GetByPuzzle(int puzzleId)
         {
-            return Ok(_sessionManager.GetSessionsByPuzzle(puzzleId));
+            var sessions = await _sessionManager.GetSessionsByPuzzleAsync(puzzleId);
+            return Ok(sessions);
         }
 
         // GET: api/sessions/player/5/active
         [HttpGet("player/{playerId}/active")]
-        public ActionResult<GameSession> GetActiveSession(int playerId)
+        public async Task<ActionResult<GameSession>> GetActiveSession(int playerId)
         {
-            var session = _sessionManager.GetActiveSession(playerId);
+            var session = await _sessionManager.GetActiveSessionAsync(playerId);
             if (session == null)
                 return NotFound(new { message = "No active session found" });
             
@@ -60,17 +63,18 @@ namespace SudokuAPI.Controllers
 
         // POST: api/sessions
         [HttpPost]
-        public ActionResult<GameSession> Start([FromBody] StartSessionRequest request)
+        public async Task<ActionResult<GameSession>> Start([FromBody] StartSessionRequest request)
         {
-            var session = _sessionManager.StartSession(request.PlayerId, request.PuzzleId, request.InitialGrid);
+            var session = await _sessionManager.StartSessionAsync(request.PlayerId, request.PuzzleId, request.InitialGrid);
             return CreatedAtAction(nameof(GetById), new { id = session.Id }, session);
         }
 
         // PUT: api/sessions/5
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] UpdateSessionRequest request)
+        public async Task<IActionResult> Update(int id, [FromBody] UpdateSessionRequest request)
         {
-            if (_sessionManager.UpdateSession(id, request.CurrentGrid, request.ElapsedSeconds, request.HintsUsed, request.Mistakes))
+            var updated = await _sessionManager.UpdateSessionAsync(id, request.CurrentGrid, request.ElapsedSeconds, request.HintsUsed, request.Mistakes);
+            if (updated)
                 return NoContent();
             
             return NotFound(new { message = $"Session with ID {id} not found" });
@@ -78,9 +82,10 @@ namespace SudokuAPI.Controllers
 
         // POST: api/sessions/5/complete
         [HttpPost("{id}/complete")]
-        public IActionResult Complete(int id)
+        public async Task<IActionResult> Complete(int id)
         {
-            if (_sessionManager.CompleteSession(id))
+            var completed = await _sessionManager.CompleteSessionAsync(id);
+            if (completed)
                 return Ok(new { message = "Session completed successfully" });
             
             return NotFound(new { message = $"Session with ID {id} not found" });
@@ -88,9 +93,10 @@ namespace SudokuAPI.Controllers
 
         // POST: api/sessions/5/abandon
         [HttpPost("{id}/abandon")]
-        public IActionResult Abandon(int id)
+        public async Task<IActionResult> Abandon(int id)
         {
-            if (_sessionManager.AbandonSession(id))
+            var abandoned = await _sessionManager.AbandonSessionAsync(id);
+            if (abandoned)
                 return Ok(new { message = "Session abandoned" });
             
             return NotFound(new { message = $"Session with ID {id} not found" });
@@ -98,9 +104,10 @@ namespace SudokuAPI.Controllers
 
         // DELETE: api/sessions/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_sessionManager.DeleteSession(id))
+            var deleted = await _sessionManager.DeleteSessionAsync(id);
+            if (deleted)
                 return NoContent();
             
             return NotFound(new { message = $"Session with ID {id} not found" });
@@ -108,29 +115,37 @@ namespace SudokuAPI.Controllers
 
         // GET: api/sessions/completed
         [HttpGet("completed")]
-        public ActionResult<List<GameSession>> GetCompleted()
+        public async Task<ActionResult<List<GameSession>>> GetCompleted()
         {
-            return Ok(_sessionManager.GetCompletedSessions());
+            var sessions = await _sessionManager.GetCompletedSessionsAsync();
+            return Ok(sessions);
         }
 
         // GET: api/sessions/fastest?count=10
         [HttpGet("fastest")]
-        public ActionResult<List<GameSession>> GetFastest([FromQuery] int count = 10)
+        public async Task<ActionResult<List<GameSession>>> GetFastest([FromQuery] int count = 10)
         {
-            return Ok(_sessionManager.GetFastestCompletions(count));
+            var sessions = await _sessionManager.GetFastestCompletionsAsync(count);
+            return Ok(sessions);
         }
 
         // GET: api/sessions/stats
         [HttpGet("stats")]
-        public ActionResult<object> GetStats()
+        public async Task<ActionResult<object>> GetStats()
         {
+            var totalSessions = (await _sessionManager.GetAllSessionsAsync()).Count;
+            var completionRate = await _sessionManager.GetCompletionRateAsync();
+            var avgCompletionTime = await _sessionManager.GetAverageCompletionTimeAsync();
+            var totalHints = await _sessionManager.GetTotalHintsUsedAsync();
+            var avgHints = await _sessionManager.GetAverageHintsPerSessionAsync();
+            
             return Ok(new 
             { 
-                totalSessions = _sessionManager.GetAllSessions().Count,
-                completionRate = _sessionManager.GetCompletionRate(),
-                averageCompletionTime = _sessionManager.GetAverageCompletionTime(),
-                totalHintsUsed = _sessionManager.GetTotalHintsUsed(),
-                averageHintsPerSession = _sessionManager.GetAverageHintsPerSession()
+                totalSessions,
+                completionRate,
+                averageCompletionTime = avgCompletionTime,
+                totalHintsUsed = totalHints,
+                averageHintsPerSession = avgHints
             });
         }
     }

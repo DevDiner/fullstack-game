@@ -17,16 +17,17 @@ namespace SudokuAPI.Controllers
 
         // GET: api/players
         [HttpGet]
-        public ActionResult<List<PlayerProfile>> GetAll()
+        public async Task<ActionResult<List<PlayerProfile>>> GetAll()
         {
-            return Ok(_playerManager.GetAllPlayers());
+            var players = await _playerManager.GetAllPlayersAsync();
+            return Ok(players);
         }
 
         // GET: api/players/5
         [HttpGet("{id}")]
-        public ActionResult<PlayerProfile> GetById(int id)
+        public async Task<ActionResult<PlayerProfile>> GetById(int id)
         {
-            var player = _playerManager.GetPlayer(id);
+            var player = await _playerManager.GetPlayerAsync(id);
             if (player == null)
                 return NotFound(new { message = $"Player with ID {id} not found" });
             
@@ -35,9 +36,9 @@ namespace SudokuAPI.Controllers
 
         // GET: api/players/username/john
         [HttpGet("username/{username}")]
-        public ActionResult<PlayerProfile> GetByUsername(string username)
+        public async Task<ActionResult<PlayerProfile>> GetByUsername(string username)
         {
-            var player = _playerManager.GetPlayerByUsername(username);
+            var player = await _playerManager.GetPlayerByUsernameAsync(username);
             if (player == null)
                 return NotFound(new { message = $"Player '{username}' not found" });
             
@@ -46,17 +47,18 @@ namespace SudokuAPI.Controllers
 
         // POST: api/players
         [HttpPost]
-        public ActionResult<PlayerProfile> Create([FromBody] PlayerProfile player)
+        public async Task<ActionResult<PlayerProfile>> Create([FromBody] PlayerProfile player)
         {
-            var created = _playerManager.AddPlayer(player);
+            var created = await _playerManager.AddPlayerAsync(player);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         // PUT: api/players/5
         [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody] PlayerProfile player)
+        public async Task<IActionResult> Update(int id, [FromBody] PlayerProfile player)
         {
-            if (_playerManager.UpdatePlayer(id, player))
+            var updated = await _playerManager.UpdatePlayerAsync(id, player);
+            if (updated)
                 return NoContent();
             
             return NotFound(new { message = $"Player with ID {id} not found" });
@@ -64,9 +66,10 @@ namespace SudokuAPI.Controllers
 
         // POST: api/players/5/game
         [HttpPost("{id}/game")]
-        public IActionResult RecordGame(int id, [FromBody] GameRecord record)
+        public async Task<IActionResult> RecordGame(int id, [FromBody] GameRecord record)
         {
-            if (_playerManager.RecordGamePlayed(id, record.Completed, record.TimeSeconds, record.HintsUsed))
+            var recorded = await _playerManager.RecordGamePlayedAsync(id, record.Completed, record.TimeSeconds, record.HintsUsed);
+            if (recorded)
                 return Ok(new { message = "Game recorded successfully" });
             
             return NotFound(new { message = $"Player with ID {id} not found" });
@@ -74,9 +77,10 @@ namespace SudokuAPI.Controllers
 
         // DELETE: api/players/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            if (_playerManager.DeletePlayer(id))
+            var deleted = await _playerManager.DeletePlayerAsync(id);
+            if (deleted)
                 return NoContent();
             
             return NotFound(new { message = $"Player with ID {id} not found" });
@@ -84,35 +88,43 @@ namespace SudokuAPI.Controllers
 
         // GET: api/players/leaderboard?count=10
         [HttpGet("leaderboard")]
-        public ActionResult<List<PlayerProfile>> GetLeaderboard([FromQuery] int count = 10)
+        public async Task<ActionResult<List<PlayerProfile>>> GetLeaderboard([FromQuery] int count = 10)
         {
-            return Ok(_playerManager.GetLeaderboard(count));
+            var players = await _playerManager.GetLeaderboardAsync(count);
+            return Ok(players);
         }
 
         // GET: api/players/streaks?count=10
         [HttpGet("streaks")]
-        public ActionResult<List<PlayerProfile>> GetTopStreaks([FromQuery] int count = 10)
+        public async Task<ActionResult<List<PlayerProfile>>> GetTopStreaks([FromQuery] int count = 10)
         {
-            return Ok(_playerManager.GetTopPlayersByStreak(count));
+            var players = await _playerManager.GetTopPlayersByStreakAsync(count);
+            return Ok(players);
         }
 
         // GET: api/players/fastest?count=10
         [HttpGet("fastest")]
-        public ActionResult<List<PlayerProfile>> GetFastest([FromQuery] int count = 10)
+        public async Task<ActionResult<List<PlayerProfile>>> GetFastest([FromQuery] int count = 10)
         {
-            return Ok(_playerManager.GetFastestPlayers(count));
+            var players = await _playerManager.GetFastestPlayersAsync(count);
+            return Ok(players);
         }
 
         // GET: api/players/stats
         [HttpGet("stats")]
-        public ActionResult<object> GetStats()
+        public async Task<ActionResult<object>> GetStats()
         {
+            var totalPlayers = (await _playerManager.GetAllPlayersAsync()).Count;
+            var avgCompletionRate = await _playerManager.GetAverageCompletionRateAsync();
+            var totalGames = await _playerManager.GetTotalGamesPlayedAsync();
+            var activePlayers = await _playerManager.GetActivePlayersAsync();
+            
             return Ok(new 
             { 
-                totalPlayers = _playerManager.GetAllPlayers().Count,
-                averageCompletionRate = _playerManager.GetAverageCompletionRate(),
-                totalGamesPlayed = _playerManager.GetTotalGamesPlayed(),
-                activePlayers = _playerManager.GetActivePlayers()
+                totalPlayers,
+                averageCompletionRate = avgCompletionRate,
+                totalGamesPlayed = totalGames,
+                activePlayers
             });
         }
     }

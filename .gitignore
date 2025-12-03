@@ -29,6 +29,11 @@ SudokuAPI/obj/
 SudokuAPI/*.user
 SudokuAPI/.vs/
 
+# SQLite Database
+SudokuAPI/*.db
+SudokuAPI/*.db-shm
+SudokuAPI/*.db-wal
+
 # Test results
 *.trx
 coverage/

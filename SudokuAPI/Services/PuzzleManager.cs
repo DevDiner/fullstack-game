@@ -1,57 +1,64 @@
+using Microsoft.EntityFrameworkCore;
+using SudokuAPI.Data;
 using SudokuAPI.Models;
 
 namespace SudokuAPI.Services
 {
     /// <summary>
-    /// Manages CRUD operations for Sudoku puzzles
+    /// Manages CRUD operations for Sudoku puzzles using Entity Framework
     /// </summary>
     public class PuzzleManager
     {
-        public List<SudokuPuzzle> Puzzles { get; private set; } = new List<SudokuPuzzle>();
-        private int nextId = 1;
+        private readonly SudokuDbContext _context;
+
+        public PuzzleManager(SudokuDbContext context)
+        {
+            _context = context;
+        }
 
         // CREATE
-        public SudokuPuzzle AddPuzzle(SudokuPuzzle puzzle)
+        public async Task<SudokuPuzzle> AddPuzzleAsync(SudokuPuzzle puzzle)
         {
-            puzzle.Id = nextId++;
-            puzzle.CreatedDate = DateTime.Now;
-            Puzzles.Add(puzzle);
+            puzzle.CreatedDate = DateTime.UtcNow;
+            _context.Puzzles.Add(puzzle);
+            await _context.SaveChangesAsync();
             return puzzle;
         }
 
         // READ
-        public SudokuPuzzle? GetPuzzle(int id)
+        public async Task<SudokuPuzzle?> GetPuzzleAsync(int id)
         {
-            return Puzzles.FirstOrDefault(p => p.Id == id);
+            return await _context.Puzzles.FindAsync(id);
         }
 
-        public List<SudokuPuzzle> GetAllPuzzles()
+        public async Task<List<SudokuPuzzle>> GetAllPuzzlesAsync()
         {
-            return Puzzles.ToList();
+            return await _context.Puzzles.ToListAsync();
         }
 
-        public List<SudokuPuzzle> GetPuzzlesByDifficulty(DifficultyLevel difficulty)
+        public async Task<List<SudokuPuzzle>> GetPuzzlesByDifficultyAsync(DifficultyLevel difficulty)
         {
-            return Puzzles.Where(p => p.Difficulty == difficulty).ToList();
+            return await _context.Puzzles
+                .Where(p => p.Difficulty == difficulty)
+                .ToListAsync();
         }
 
         // UPDATE
-        public bool UpdatePuzzle(int id, SudokuPuzzle updatedPuzzle)
+        public async Task<bool> UpdatePuzzleAsync(int id, SudokuPuzzle updatedPuzzle)
         {
-            var puzzle = GetPuzzle(id);
+            var puzzle = await _context.Puzzles.FindAsync(id);
             if (puzzle != null)
             {
-                updatedPuzzle.Id = id;
-                var index = Puzzles.IndexOf(puzzle);
-                Puzzles[index] = updatedPuzzle;
+                _context.Entry(puzzle).CurrentValues.SetValues(updatedPuzzle);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
-        public bool RecordPlay(int id, bool completed, int timeSeconds)
+        public async Task<bool> RecordPlayAsync(int id, bool completed, int timeSeconds)
         {
-            var puzzle = GetPuzzle(id);
+            var puzzle = await _context.Puzzles.FindAsync(id);
             if (puzzle != null)
             {
                 puzzle.TimesPlayed++;
@@ -72,50 +79,54 @@ namespace SudokuAPI.Services
                         puzzle.AverageTimeSeconds = timeSeconds;
                     }
                 }
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
         // DELETE
-        public bool DeletePuzzle(int id)
+        public async Task<bool> DeletePuzzleAsync(int id)
         {
-            var puzzle = GetPuzzle(id);
+            var puzzle = await _context.Puzzles.FindAsync(id);
             if (puzzle != null)
             {
-                Puzzles.Remove(puzzle);
+                _context.Puzzles.Remove(puzzle);
+                await _context.SaveChangesAsync();
                 return true;
             }
             return false;
         }
 
         // ANALYTICS (LINQ Queries)
-        public Dictionary<DifficultyLevel, int> GetPuzzleCountByDifficulty()
+        public async Task<Dictionary<DifficultyLevel, int>> GetPuzzleCountByDifficultyAsync()
         {
-            return Puzzles
+            return await _context.Puzzles
                 .GroupBy(p => p.Difficulty)
-                .ToDictionary(g => g.Key, g => g.Count());
+                .ToDictionaryAsync(g => g.Key, g => g.Count());
         }
 
-        public List<SudokuPuzzle> GetMostPlayedPuzzles(int count = 10)
+        public async Task<List<SudokuPuzzle>> GetMostPlayedPuzzlesAsync(int count = 10)
         {
-            return Puzzles
+            return await _context.Puzzles
                 .OrderByDescending(p => p.TimesPlayed)
                 .Take(count)
-                .ToList();
+                .ToListAsync();
         }
 
-        public double GetAverageCompletionRate()
+        public async Task<double> GetAverageCompletionRateAsync()
         {
-            return Puzzles.Any() ? Puzzles.Average(p => p.CompletionRate) : 0;
+            var puzzles = await _context.Puzzles.ToListAsync();
+            return puzzles.Any() ? puzzles.Average(p => p.CompletionRate) : 0;
         }
 
-        public SudokuPuzzle? GetRandomPuzzle(DifficultyLevel? difficulty = null)
+        public async Task<SudokuPuzzle?> GetRandomPuzzleAsync(DifficultyLevel? difficulty = null)
         {
-            var puzzles = difficulty.HasValue 
-                ? Puzzles.Where(p => p.Difficulty == difficulty.Value).ToList()
-                : Puzzles;
+            var query = difficulty.HasValue 
+                ? _context.Puzzles.Where(p => p.Difficulty == difficulty.Value)
+                : _context.Puzzles;
             
+            var puzzles = await query.ToListAsync();
             return puzzles.Any() 
                 ? puzzles[new Random().Next(puzzles.Count)] 
                 : null;

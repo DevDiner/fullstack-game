@@ -1,293 +1,387 @@
-# Sudoku Zen - Full Stack Edition
+#  Video Game Backend API
 
-**An intelligent Sudoku game with C# backend API and modern web frontend**
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![C#](https://img.shields.io/badge/C%23-12.0-239120?logo=csharp&logoColor=white)](https://docs.microsoft.com/dotnet/csharp/)
+[![Entity Framework](https://img.shields.io/badge/Entity_Framework-Core_8.0-512BD4)](https://docs.microsoft.com/ef/core/)
+[![SQLite](https://img.shields.io/badge/SQLite-3-003B57?logo=sqlite)](https://sqlite.org/)
+[![JWT](https://img.shields.io/badge/JWT-Authentication-000000?logo=json-web-tokens)](https://jwt.io/)
+[![Swagger](https://img.shields.io/badge/Swagger-OpenAPI-85EA2D?logo=swagger)](https://swagger.io/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-![Version](https://img.shields.io/badge/version-2.0-blue)
-![.NET](https://img.shields.io/badge/.NET-8.0-purple)
-![License](https://img.shields.io/badge/license-MIT-green)
+> **A production-ready RESTful API for video game data management featuring Entity Framework Core, SQLite database, JWT authentication, and comprehensive CRUD operations.**
 
----
-
-## What Is This?
-
-**Sudoku Zen** is a full-stack web application that combines:
-- **Frontend**: Beautiful, responsive Sudoku game built with HTML5 Canvas and JavaScript
-- **Backend**: RESTful C# API for data persistence, player management, and analytics
-- **AI Integration**: Google Gemini AI for intelligent hints
-
-This project demonstrates professional full-stack development with C# and modern web technologies.
+Built as a backend system for video games, this API demonstrates professional ASP.NET Core development with secure authentication, database design, and scalable architecture. Uses SQLite for zero-configuration, cross-platform database deployment.
 
 ---
 
-## Features
+##  **Features**
 
-### Game Features
-- **Multiple Difficulty Levels**: Easy, Medium, Hard
-- **AI-Powered Hints**: Get intelligent hints from Google Gemini AI
-- **Real-Time Validation**: Instant feedback on your moves
-- **Timer**: Track your completion time
-- **Responsive Design**: Works on desktop and mobile
+###  **Security & Authentication**
+- **JWT Bearer Authentication** - Secure token-based auth
+- **Password Hashing** - PBKDF2 with 100,000 iterations
+- **Role-Based Authorization** - Admin and Player roles
+- **Protected Endpoints** - Secure access control
 
-### Backend Features (C# API)
-- **Player Profiles**: Track your progress and statistics
-- **Puzzle Management**: Save and retrieve puzzles
-- **Session Tracking**: Record every game you play
-- **Leaderboards**: Compete with other players
-- **Analytics**: View detailed statistics with LINQ queries
+### **Database & ORM**
+- **SQL Server** - Relational database
+- **Entity Framework Core 8.0** - Modern ORM
+- **Code-First Migrations** - Database versioning
+- **Optimized Queries** - Indexed fields and relationships
+- **Seed Data** - Pre-populated sample data
 
-### Technical Features
-- **RESTful API**: Clean, well-documented endpoints
-- **CRUD Operations**: Full Create, Read, Update, Delete for all entities
-- **LINQ Queries**: Advanced data analysis (15+ unique queries)
-- **Swagger Documentation**: Interactive API documentation
-- **CORS Enabled**: Frontend can call the API seamlessly
+### **RESTful API**
+- **25+ Endpoints** - Complete CRUD operations
+- **Standard HTTP Methods** - GET, POST, PUT, DELETE
+- **Proper Status Codes** - 200, 201, 400, 401, 404
+- **JSON Responses** - Consistent data format
+- **CORS Enabled** - Cross-origin support
 
----
+### **Game Data Management**
+- **Puzzles** - Sudoku puzzle library
+- **Players** - User profiles and statistics
+- **Sessions** - Game play tracking
+- **Analytics** - LINQ-based data analysis
+- **Leaderboards** - Competitive rankings
 
-## Architecture
-
-```
-sudoku-zen/
-├── index.html              # Game UI
-├── index.js                # Frontend logic
-├── api-client.js           # API integration
-└── SudokuAPI/              # C# Backend
-    ├── Models/
-    │   ├── SudokuPuzzle.cs
-    │   ├── PlayerProfile.cs
-    │   └── GameSession.cs
-    ├── Services/
-    │   ├── PuzzleManager.cs
-    │   ├── PlayerManager.cs
-    │   └── SessionManager.cs
-    └── Controllers/
-        ├── PuzzlesController.cs
-        ├── PlayersController.cs
-        └── SessionsController.cs
-```
+###  **Documentation**
+- **Swagger UI** - Interactive API documentation
+- **OpenAPI Spec** - Standard API definition
+- **Setup Guides** - Complete installation docs
+- **Testing Guide** - Comprehensive test scenarios
 
 ---
 
-## Quick Start
+##  **Quick Start**
 
 ### Prerequisites
-- **.NET 8.0 SDK**: [Download here](https://dotnet.microsoft.com/download/dotnet/8.0)
-- **Modern web browser**: Chrome, Firefox, Edge, or Safari
-- **Google Gemini API Key** (optional, for hints): [Get one here](https://aistudio.google.com/app/apikey)
 
-### Step 1: Start the Backend API
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- That's it! SQLite is included automatically
 
-```powershell
+### Installation
+
+```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/video-game-backend-api.git
+cd video-game-backend-api
+
 # Navigate to API directory
 cd SudokuAPI
 
 # Restore dependencies
 dotnet restore
 
+# Install EF Core tools
+dotnet tool install --global dotnet-ef
+
+# Create database
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
 # Run the API
 dotnet run
 ```
 
-The API will start at **http://localhost:5000**
+### Access
 
-### Step 2: Start the Frontend
-
-```powershell
-# Navigate back to root
-cd ..
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-The game will open at **http://localhost:5173**
-
-### Step 3: (Optional) Configure Gemini AI
-
-Create a `.env.local` file in the root:
-```
-VITE_API_KEY=your_gemini_api_key_here
-```
+- **API**: http://localhost:5000
+- **Swagger UI**: http://localhost:5000/swagger
 
 ---
 
-## API Endpoints
+## **API Endpoints**
 
-### Players
-- `GET /api/players` - Get all players
-- `GET /api/players/{id}` - Get specific player
-- `POST /api/players` - Create new player
-- `PUT /api/players/{id}` - Update player
-- `POST /api/players/{id}/game` - Record game result
-- `GET /api/players/leaderboard` - Get top players
-- `GET /api/players/fastest` - Get fastest players
-- `GET /api/players/stats` - Get player statistics
+### Authentication
+```http
+POST   /api/auth/register      # Register new user
+POST   /api/auth/login         # Login and get JWT token
+GET    /api/auth/me            # Get current user info (protected)
+```
 
 ### Puzzles
-- `GET /api/puzzles` - Get all puzzles
-- `GET /api/puzzles/{id}` - Get specific puzzle
-- `GET /api/puzzles/random?difficulty=easy` - Get random puzzle
-- `POST /api/puzzles` - Create new puzzle
-- `POST /api/puzzles/{id}/play` - Record puzzle play
-- `GET /api/puzzles/top` - Get most played puzzles
+```http
+GET    /api/puzzles                    # Get all puzzles
+GET    /api/puzzles/{id}               # Get specific puzzle
+GET    /api/puzzles/random             # Get random puzzle
+GET    /api/puzzles/difficulty/{level} # Get by difficulty
+POST   /api/puzzles                    # Create puzzle (protected)
+PUT    /api/puzzles/{id}               # Update puzzle (protected)
+DELETE /api/puzzles/{id}               # Delete puzzle (protected)
+```
+
+### Players
+```http
+GET    /api/players                  # Get all players
+GET    /api/players/{id}             # Get specific player
+GET    /api/players/leaderboard      # Get top players
+GET    /api/players/fastest          # Get fastest players
+POST   /api/players                  # Create player
+PUT    /api/players/{id}             # Update player
+DELETE /api/players/{id}             # Delete player
+```
 
 ### Sessions
-- `GET /api/sessions` - Get all sessions
-- `POST /api/sessions` - Start new session
-- `PUT /api/sessions/{id}` - Update session
-- `POST /api/sessions/{id}/complete` - Mark session complete
-- `GET /api/sessions/fastest` - Get fastest completions
-- `GET /api/sessions/stats` - Get session statistics
-
-**Full API Documentation**: http://localhost:5000/swagger
-
----
-
-## Data Models
-
-### SudokuPuzzle
-```csharp
-- Id: int
-- InitialGrid: string (81 characters)
-- SolutionGrid: string (81 characters)
-- Difficulty: DifficultyLevel (Easy/Medium/Hard/Expert/Evil)
-- TimesPlayed: int
-- CompletionRate: double
+```http
+GET    /api/sessions              # Get all sessions
+GET    /api/sessions/{id}         # Get specific session
+POST   /api/sessions              # Start new session
+PUT    /api/sessions/{id}         # Update session
+POST   /api/sessions/{id}/complete # Mark session complete
 ```
 
-### PlayerProfile
-```csharp
-- Id: int
-- Username: string
-- TotalGamesPlayed: int
-- TotalGamesCompleted: int
-- CompletionRate: double
-- Current Streak: int
-- BestTimeSeconds: int
+**Full API Documentation**: Available at `/swagger` when running
+
+---
+
+## **Database Schema**
+
+### Entity Relationship Diagram
+
+```
+┌─────────────┐       ┌──────────────┐       ┌─────────────┐
+│    Users    │       │   Players    │       │   Puzzles   │
+├─────────────┤       ├──────────────┤       ├─────────────┤
+│ Id (PK)     │       │ Id (PK)      │       │ Id (PK)     │
+│ Username    │       │ Username     │       │ Name        │
+│ PasswordHash│       │ Email        │       │ InitialGrid │
+│ Role        │       │ TotalGames   │       │ SolutionGrid│
+│ CreatedAt   │       │ BestTime     │       │ Difficulty  │
+└─────────────┘       │ CurrentStreak│       │ TimesPlayed │
+                      └──────────────┘       └─────────────┘
+                             │                      │
+                             └──────┬───────────────┘
+                                    │
+                             ┌──────▼──────┐
+                             │  Sessions   │
+                             ├─────────────┤
+                             │ Id (PK)     │
+                             │ PlayerId(FK)│
+                             │ PuzzleId(FK)│
+                             │ CurrentGrid │
+                             │ ElapsedTime │
+                             │ IsCompleted │
+                             └─────────────┘
 ```
 
-### GameSession
-```csharp
-- Id: int
-- PlayerId: int
-- PuzzleId: int
-- ElapsedSeconds: int
-- HintsUsed: int
-- IsCompleted: bool
+### Tables
+
+- **Users** - Authentication and user accounts
+- **Players** - Player profiles and statistics
+- **Puzzles** - Game puzzle library
+- **Sessions** - Individual game sessions
+
+---
+
+## **Authentication Flow**
+
+### 1. Register
+```bash
+curl -X POST http://localhost:5000/api/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "player1",
+    "password": "SecurePass@123",
+    "confirmPassword": "SecurePass@123"
+  }'
+```
+
+**Response:**
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "username": "player1",
+  "role": "Player",
+  "expiresAt": "2025-12-03T18:00:00Z"
+}
+```
+
+### 2. Use Token
+```bash
+curl http://localhost:5000/api/auth/me \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### 3. Swagger Authentication
+1. Click the **Authorize** 🔒 button
+2. Enter: `Bearer YOUR_JWT_TOKEN`
+3. Click **Authorize**
+4. Now you can test protected endpoints!
+
+---
+
+## **Testing**
+
+### Using Swagger UI
+1. Navigate to http://localhost:5000/swagger
+2. Register a new user via `/api/auth/register`
+3. Copy the JWT token from response
+4. Click **Authorize** and paste token
+5. Test any endpoint!
+
+### Using curl
+```bash
+# Get all puzzles
+curl http://localhost:5000/api/puzzles
+
+# Create a puzzle (requires authentication)
+curl -X POST http://localhost:5000/api/puzzles \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Test Puzzle",
+    "difficulty": "Medium",
+    ...
+  }'
+```
+
+### Using Postman
+Import the [API collection](docs/postman_collection.json) and environment.
+
+---
+
+## **Project Structure**
+
+```
+SudokuAPI/
+├── Controllers/         # API endpoint controllers
+│   ├── AuthController.cs
+│   ├── PuzzlesController.cs
+│   ├── PlayersController.cs
+│   └── SessionsController.cs
+│
+├── Models/              # Data models
+│   ├── SudokuPuzzle.cs
+│   ├── PlayerProfile.cs
+│   ├── GameSession.cs
+│   └── User.cs
+│
+├── Services/            # Business logic
+│   ├── AuthService.cs
+│   ├── PuzzleManager.cs
+│   ├── PlayerManager.cs
+│   └── SessionManager.cs
+│
+├── Data/                # Database context
+│   └── SudokuDbContext.cs
+│
+├── Program.cs           # Application entry point
+├── appsettings.json     # Configuration
+└── SudokuAPI.csproj     # Project file
 ```
 
 ---
 
-## C# Requirements Met
+##  **Technologies Used**
 
-This project fulfills **all requirements** for a comprehensive C# application:
-
-### Core Requirements
-- **3+ Entity Models**: SudokuPuzzle, PlayerProfile, GameSession
-- **Full CRUD Operations**: Implemented for all entities
-- **LINQ Queries**: 15+ unique queries for analytics
-- **Data Persistence**: JSON export/import capability
-- **Professional Structure**: Clean architecture with Models, Services, Controllers
-
-### Advanced Features
-- **RESTful API**: Industry-standard web API
-- **Swagger Documentation**: Auto-generated API docs
-- **CORS Configuration**: Secure cross-origin requests
-- **Error Handling**: Proper HTTP status codes
-- **Dependency Injection**: ASP.NET Core DI container
+| Technology | Purpose |
+|------------|---------|
+| **ASP.NET Core 8.0** | Web API framework |
+| **Entity Framework Core** | ORM for database access |
+| **SQL Server** | Relational database |
+| **JWT** | Secure authentication |
+| **Swagger/OpenAPI** | API documentation |
+| **LINQ** | Data queries and analytics |
+| **PBKDF2** | Password hashing |
 
 ---
 
-## LINQ Examples
+## **Requirements Met**
 
-The backend uses advanced LINQ queries:
+This project demonstrates:
 
-```csharp
-// Leaderboard
-Players.OrderByDescending(p => p.TotalGamesCompleted)
-       .ThenByDescending(p => p.CompletionRate)
-       .Take(10)
+✅ **Database-Backed Storage** - SQL Server with normalized schema  
+✅ **RESTful Endpoints** - 25+ well-structured endpoints  
+✅ **Full CRUD Operations** - Complete Create, Read, Update, Delete  
+✅ **JSON Serialization** - All responses in JSON format  
+✅ **JWT Authentication** - Secure token-based auth  
+✅ **Data Validation** - Comprehensive input validation  
+✅ **Entity Framework** - Complete ORM integration  
+✅ **Migrations** - Database version control  
+✅ **Role-Based Auth** - Admin and Player roles  
 
-// Average completion time
-Sessions.Where(s => s.IsCompleted)
-        .Average(s => s.ElapsedSeconds)
+See [REQUIREMENTS_FULFILLMENT.md](SudokuAPI/REQUIREMENTS_FULFILLMENT.md) for detailed verification.
 
-// Puzzle difficulty distribution
-Puzzles.GroupBy(p => p.Difficulty)
-       .ToDictionary(g => g.Key, g => g.Count())
+---
 
-// Active players
-Players.Count(p => p.LastPlayed >= cutoffDate)
+## **Documentation**
+
+- **[Installation Guide](INSTALLATION.md)** - Complete setup instructions
+- **[Database Setup](SudokuAPI/DATABASE_SETUP.md)** - Database configuration
+- **[API Testing Guide](SudokuAPI/API_TESTING_GUIDE.md)** - How to test endpoints
+- **[Quick Start](QUICK_START.md)** - Quick reference guide
+
+---
+
+## **Learning Outcomes**
+
+This project showcases proficiency in:
+
+- **Database Design** - Relational schema with proper normalization
+- **Entity Framework** - Code-first approach with migrations
+- **Web API Development** - RESTful architecture and best practices
+- **Authentication** - JWT implementation and password security
+- **Authorization** - Role-based access control
+- **LINQ** - Advanced query operations
+- **Dependency Injection** - Modern ASP.NET Core patterns
+- **API Documentation** - Swagger/OpenAPI integration
+
+---
+
+## **Security Features**
+
+- **PBKDF2 Password Hashing** - 100,000 iterations with unique salts
+- **JWT Tokens** - Secure, stateless authentication
+- **HTTPS Support** - Encrypted communication
+- **CORS Policy** - Controlled cross-origin access
+- **Input Validation** - Protection against invalid data
+- **SQL Injection Protection** - Parameterized queries via EF Core
+
+---
+
+## **Deployment**
+
+### Azure App Service
+```bash
+# Publish the application
+dotnet publish -c Release -o ./publish
+
+# Deploy to Azure
+az webapp up --name your-app-name --resource-group your-rg
+```
+
+### Docker
+```dockerfile
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY publish/ .
+ENTRYPOINT ["dotnet", "SudokuAPI.dll"]
 ```
 
 ---
 
-## How to Play
+##  **Contributing**
 
-1. **Enter your username** when prompted
-2. **Select difficulty** (Easy, Medium, or Hard)
-3. **Click a cell** to select it
-4. **Type a number** (1-9) or click the number pad
-5. **Get hints** using the Gemini AI button
-6. **Validate** your solution anytime
-7. **Complete** the puzzle to see your time!
+Contributions welcome! Please:
 
----
-
-## Development
-
-### Running Tests
-```powershell
-cd SudokuAPI
-dotnet test
-```
-
-### Build for Production
-```powershell
-# Backend
-cd SudokuAPI
-dotnet publish -c Release
-
-# Frontend
-npm run build
-```
-
-### API Documentation
-While the API is running, visit: http://localhost:5000/swagger
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ---
 
-## Contributing
+## **License**
 
-This is an educational project. Feel free to:
-- Fork and experiment
-- Add new features
-- Improve the UI
-- Enhance the API
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## License
+## 🙏 **Acknowledgments**
 
-MIT License - Feel free to use this project for learning!
-
----
-
-
-## Next Steps
-
-Want to extend this project? Try:
-- Add database persistence (SQL Server, PostgreSQL)
-- Implement authentication (JWT tokens)
-- Add real-time multiplayer
-- Create mobile app (Xamarin/MAUI)
-- Deploy to cloud (Azure, AWS)
+- Built with [ASP.NET Core](https://dotnet.microsoft.com/apps/aspnet)
+- Database powered by [Entity Framework Core](https://docs.microsoft.com/ef/core/)
+- API documentation by [Swashbuckle](https://github.com/domaindrivendev/Swashbuckle.AspNetCore)
 
 ---
 
-**Built with ❤️ using C# ASP.NET Core and Modern Web Technologies**
-
-Enjoy playing Sudoku Zen! 🧩✨
