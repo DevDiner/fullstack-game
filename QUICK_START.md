@@ -1,10 +1,10 @@
-# ⚡ Quick Start Guide - Sudoku Zen
+# Quick Start Guide - Sudoku Zen
 
 **Get up and running in 2 minutes!**
 
 ---
 
-## 🚀 One-Command Start
+## One-Command Start
 
 ```powershell
 .\start.bat
@@ -16,7 +16,7 @@ This launches:
 
 ---
 
-## 📋 Prerequisites Checklist
+## Prerequisites Checklist
 
 Before running, ensure you have:
 
@@ -33,7 +33,7 @@ Before running, ensure you have:
 
 ---
 
-## 🎮 Manual Start (Alternative)
+##  Manual Start (Alternative)
 
 ### Terminal 1 - Backend API
 ```powershell
@@ -50,7 +50,7 @@ npm run dev
 
 ---
 
-## 🌐 URLs to Know
+## URLs to Know
 
 | Service | URL | Purpose |
 |---------|-----|---------|
@@ -60,7 +60,7 @@ npm run dev
 
 ---
 
-## 🎯 First Time Setup
+## First Time Setup
 
 ```powershell
 # 1. Install dependencies
@@ -77,7 +77,7 @@ cd ..
 
 ---
 
-## 💡 Common Commands
+##  Common Commands
 
 ### Development
 ```powershell
@@ -115,7 +115,7 @@ curl -X POST http://localhost:5000/api/players ^
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### "dotnet command not found"
 → Install .NET SDK: https://dotnet.microsoft.com/download/dotnet/8.0
@@ -139,7 +139,7 @@ const API_BASE_URL = 'http://localhost:5000/api';
 
 ---
 
-## 📊 API Quick Reference
+## API Quick Reference
 
 ### Players
 ```http
@@ -181,7 +181,7 @@ POST   /api/sessions/{id}/complete # Finish
 
 ---
 
-## 🔑 Optional: Gemini AI Setup
+##  Optional: Gemini AI Setup
 
 For AI-powered hints:
 
@@ -194,7 +194,7 @@ For AI-powered hints:
 
 ---
 
-## 📁 Key Files
+##  Key Files
 
 | File | Purpose |
 |------|---------|
@@ -218,7 +218,7 @@ For AI-powered hints:
 
 ---
 
-## ✅ Health Check
+##  Health Check
 
 Verify everything works:
 
@@ -248,12 +248,12 @@ npm run build
 
 ---
 
-## 🚦 Status Indicators
+##  Status Indicators
 
 **Backend Running:**
 ```
 ✓ Sudoku API is running!
-📍 API URL: http://localhost:5000
+ API URL: http://localhost:5000
 ```
 
 **Frontend Running:**
@@ -264,7 +264,7 @@ VITE ready in XXXms
 
 ---
 
-## 💾 Data Persistence
+##  Data Persistence
 
 **Current**: In-memory (resets on restart)
 
@@ -277,7 +277,7 @@ VITE ready in XXXms
 
 ---
 
-## 🎯 Next Steps
+##  Next Steps
 
 After getting it running:
 
@@ -288,11 +288,3 @@ After getting it running:
 5. ✅ View statistics dashboard
 
 ---
-
-**Need more help?** See `INSTALLATION.md` for detailed troubleshooting!
-
----
-
-**Version**: 2.0  
-**Last Updated**: 2025-11-30  
-**Status**: ✅ Ready to Run

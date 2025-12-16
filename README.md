@@ -56,7 +56,7 @@ Built as a backend system for video games, this API demonstrates professional AS
 ### Prerequisites
 
 - [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- That's it! SQLite is included automatically
+- SQLite is included automatically
 
 ### Installation
 

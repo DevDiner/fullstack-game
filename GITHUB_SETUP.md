@@ -95,7 +95,7 @@ swagger, crud-api, database-design
 
 ### **Add Badges to README**
 
-Already included in your README.md:
+Already included in README.md:
 - .NET version
 - C# version
 - Entity Framework
@@ -113,7 +113,7 @@ GitHub will automatically show:
 
 ### **Create Releases**
 
-**1. Tag your version:**
+**1. Tag version:**
 ```bash
 git tag -a v1.0 -m "Production Release v1.0: Complete Video Game Backend API"
 git push origin v1.0
@@ -128,10 +128,6 @@ git push origin v1.0
 - Publish release
 
 ---
-
-##  **Add Screenshots (Optional)**
-
-**If you want to add screenshots:**
 
 **1. Run the API and capture:**
 - Swagger UI homepage
